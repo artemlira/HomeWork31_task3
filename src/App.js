@@ -11,6 +11,8 @@ import img6 from './images/6.png';
 
 
 function App() {
+  const apiKey = '4016c185-1b60-4504-9409-fea47273baf6';
+
   const images = {
     1: img1,
     2: img2,
@@ -20,56 +22,54 @@ function App() {
     6: img6
   }
 
-  const [randomUser, setRandomUser] = useState([]);
-  const [randomComp, setRandomComp] = useState([]);
+  const [randomUser, setRandomUser] = useState([1, 1]);
+  const [randomComp, setRandomComp] = useState([1, 1]);
   const [modal, setModal] = useState(null);
+  const [play, setPlay] = useState(false);
 
 
 
   useEffect(() => {
-    if (true) {
-      axios.post('https://api.random.org/json-rpc/4/invoke', {
-        method: 'generateIntegers',
-        jsonrpc: "2.0",
-        params: {
-          apiKey: '279c0934-2766-4615-b3c5-c15d9eddf827',
-          n: 2,
-          min: 1,
-          max: 6
-        },
-        id: 1
+    axios.post('https://api.random.org/json-rpc/4/invoke', {
+      method: 'generateIntegers',
+      jsonrpc: "2.0",
+      params: {
+        apiKey: apiKey,
+        n: 2,
+        min: 1,
+        max: 6
+      },
+      id: 1
+    })
+      .then((response) => {
+        play && setRandomUser(response.data.result.random.data);
+        play && setModal(true);
       })
-        .then((response) => {
-          setRandomUser(response.data.result.random.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, []);
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [play]);
 
   useEffect(() => {
-    if (true) {
-      axios.post('https://api.random.org/json-rpc/4/invoke', {
-        method: 'generateIntegers',
-        jsonrpc: "2.0",
-        params: {
-          apiKey: '279c0934-2766-4615-b3c5-c15d9eddf827',
-          n: 2,
-          min: 1,
-          max: 6
-        },
-        id: 1
+    axios.post('https://api.random.org/json-rpc/4/invoke', {
+      method: 'generateIntegers',
+      jsonrpc: "2.0",
+      params: {
+        apiKey: apiKey,
+        n: 2,
+        min: 1,
+        max: 6
+      },
+      id: 1
+    })
+      .then((response) => {
+        play && setRandomComp(response.data.result.random.data);
+        play && setModal(true);
       })
-        .then((response) => {
-          setRandomComp(response.data.result.random.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, []);
-
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [play]);
 
   return (
     <div className="wrapper">
@@ -84,7 +84,7 @@ function App() {
               <img src={images[randomUser[1]]} alt="cubes" />
             </div>
           </div>
-          <button>Грати</button>
+          <button onClick={() => setPlay(true)}>Зробити кидок</button>
         </div>
         <div className="comp__field">
           <h3>Поле комп'ютера</h3>
